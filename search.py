@@ -109,114 +109,6 @@ def minimax(side, board, flags, depth):
 
     best_moveList.insert(0, best_move)
     return value, best_moveList, moveTree
-    
-    # for move in moves :
-    #   print(encode(*move), "*****")
-    # while depth > 0 :
-    #   moves = [ move for move in generateMoves(side, board, flags) ] #generate list of possible moves
-    #   for move in moves :
-    #     new_side, new_board, new_flags = makeMove(side, board, move[0], move[1], flags, move[2])
-    #     # board_value = new_board
-    #     # if minimax(new_side, new_board, new_flags, depth - 1) != None :
-    #     value, moveList, moveTree_inner = minimax(new_side, new_board, new_flags, depth - 1)
-    #       # print(value)
-    #     moveTree[encode(*move)] = moveTree_inner
-        # print(value, "xxxxxxx")
-        
-
-        
-        # move_value_dict[encode(*move)] = value
-
-        # if side == False : #player0 moves next
-        #   max_move = max(move_value_dict, key = move_value_dict.get)
-        #   # print("1", max_move)
-
-        # else : #player1 moves next
-        #   max_move = min(move_value_dict, key = move_value_dict.get)
-        
-        # new_side, new_board, new_flags = makeMove(side, board, max_move[0], max_move[1], flags, max_move[2])
-
-        # minimax(new_side, new_board, new_flags, depth - 1)
-
-    # return value, moveList, moveTree
-    # print(moveTree)
-        
-
-      
-    
-
-
-    
-
-    # while (depth > 0) :
-    #   moves = [ move for move in generateMoves(side, board, flags) ] #generate list of possible moves
-    #   for move in moves :
-    #     minimax(side, board, flags, depth)
-    #   # if side == False : #player0 moves next
-    #   #   # return optimal list of moves as moveList
-
-    #   # figure out how to choose which move to do
-    #   for move in moves :
-    #     print(encode(*move))
-    #     new_side, new_board, new_flags = makeMove(side, board, move[0], move[1], flags, move[2])
-    #     value = evaluate(new_board)
-    #     print(value)
-    #     move_value_dict[encode(*move)] = value
-    #     # moveTree_inner[encode(*move)] = {}
-      
-    #   # find move with greatest value
-    #   if side == False : #player0 moves next
-    #     # max_move = moves[3]
-    #     max_move = max(move_value_dict, key = move_value_dict.get)
-    #     print("1", max_move)
-    #     # print_move = (decode(*max_move))
-    #     # print(print_move)
-    #   else : #player1 moves next
-    #     max_move = min(move_value_dict, key = move_value_dict.get)
-    #     print("2",max_move)
-    #   # moveList.append(max_move)
-    #   print("****", max_move)
-    #   # print(decode(*max_move[0]))
-    #   # print(max_move[1])
-    #   # print(max_move[2])
-    #   moveTree[encode(*max_move)] = moveTree_inner
-
-    #   # make move with greatest value
-    #   new_side, new_board, new_flags = makeMove(side, board, max_move[0], max_move[1], flags, max_move[2])
-    #   depth = depth - 1
-
-    #   # recurse
-    #   minimax(new_side, new_board, new_flags, depth)
-    #   # else : #player1 moves next
-    #   #   # figure out how to choose which move to do
-    #   #   for move in moves :
-    #   #     new_side, new_board, new_flags = makeMove(side, board, move[0], move[1], flags, move[2])
-    #   #     value = evaluate(new_board)
-    #   #     move_value_dict[move] = value
-    #   #     moveTree_inner[encode(*move)] = {}
-        
-    #   #   # find move with lowest value
-    #   #   min_move = min(move_value_dict, key = move_value_dict.get)
-    #   #   moveList.append(min_move)
-    #   #   moveTree[encode(*max_move)] = moveTree_inner
-
-    #   #   # make move with greatest value
-    #   #   new_side, new_board, new_flags = makeMove(side, board, min_move[0], min_move[1], flags, min_move[2])
-    #   #   depth = depth - 1
-
-    #   #   # recurse
-    #   #   minimax(new_side, new_board, new_flags, depth)
-      
-    #   if depth == 1 :
-    #     value_result = evaluate(new_board)
-      
-    #   # create moveList
-    #   for key in moveTree :
-    #     moveList.append(key)
-    
-    # return(value_result, moveList, moveTree)
-    
-    # raise NotImplementedError("you need to write this!")
 
 def alphabeta(side, board, flags, depth, alpha=-math.inf, beta=math.inf):
     '''
@@ -232,51 +124,57 @@ def alphabeta(side, board, flags, depth, alpha=-math.inf, beta=math.inf):
       depth (int >=0): depth of the search (number of moves)
     '''
 
-    # moveTree = {}
-    # if depth == 0 :
-    #   return evaluate(board), [], {}
+    best_moveList = []
+    best_move_fro = []
+    best_move_to = []
+    best_move = [best_move_fro, best_move_to, None]
+
+    if depth == 0 :
+      return evaluate(board), [], {}
     
-    # moves = [ move for move in generateMoves(side, board, flags) ] #generate list of possible moves
-    # if side == False : #player0(white)
-    #   value = -sys.maxsize
+    moves = [ move for move in generateMoves(side, board, flags) ] #generate list of possible moves
+    if side == False : #player0(white)
+      moveTree = {}
+      value = -sys.maxsize
 
-    #   for move in moves :
-    #     new_side, new_board, new_flags = makeMove(side, board, move[0], move[1], flags, move[2])
-    #     val_result_of_alphabeta, moveList, moveTree_inner = alphabeta(new_side, new_board, new_flags, depth -1, alpha, beta)
+      for move in moves :
+        new_side, new_board, new_flags = makeMove(side, board, move[0], move[1], flags, move[2])
+        val_result_of_minmax, moveList, moveTree_inner = minimax(new_side, new_board, new_flags, depth - 1)
 
-    #     if val_result_of_alphabeta > value : #find the best move
-    #       best_move = move
-    #       value = val_result_of_alphabeta
+        if val_result_of_minmax > value : #find the best move
+          best_move = move
+          best_moveList = moveList
+          value = val_result_of_minmax
         
-    #     if value >+ beta :
-    #       break
-
-    #     alpha = max(alpha, value)
-    #     moveTree[encode(*move)] = moveTree_inner
-    #   moveList.append(best_move)
-
-    #   return value, moveList, moveTree
-    
-    # else: #player1(black)
-    #   value = sys.maxsize
-
-    #   for move in moves :
-    #     new_side, new_board, new_flags = makeMove(side, board, move[0], move[1], flags, move[2])
-    #     val_result_of_alphabeta, moveList, moveTree_inner = alphabeta(new_side, new_board, new_flags, depth -1, alpha, beta)
-
-    #     if val_result_of_alphabeta < value : #find the best move
-    #       best_move = move
-    #       value = val_result_of_alphabeta
+        if value >= beta:
+          break
         
-    #     if value <=alpha :
-    #       break
-        
-    #     beta = min(beta, value)
-    #     moveTree[encode(*move)] = moveTree_inner
-    #   moveList.append(best_move)
+        alpha = max(alpha, value)
 
-    #   return value, moveList, moveTree
-    # raise NotImplementedError("you need to write this!")
+        moveTree[encode(*move)] = moveTree_inner
+
+    else : #player1(black)
+      moveTree = {}
+      value = sys.maxsize 
+
+      for move in moves :
+        new_side, new_board, new_flags = makeMove(side, board, move[0], move[1], flags, move[2])
+        val_result_of_minmax, moveList, moveTree_inner = minimax(new_side, new_board, new_flags, depth - 1)
+
+        if val_result_of_minmax < value: #find the best move
+          best_move = move
+          best_moveList = moveList
+          value = val_result_of_minmax
+
+        if value <= alpha :
+          break
+
+        beta = min(beta, value)
+
+        moveTree[encode(*move)] = moveTree_inner
+
+    best_moveList.insert(0, best_move)
+    return value, best_moveList, moveTree
     
 
 def stochastic(side, board, flags, depth, breadth, chooser):
