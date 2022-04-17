@@ -146,14 +146,13 @@ def alphabeta(side, board, flags, depth, alpha=-math.inf, beta=math.inf):
           best_moveList = moveList
           value = val_result_of_minmax
         
-        
-
+        moveTree[encode(*move)] = moveTree_inner
         if value >= beta:
           break
 
         alpha = max(alpha, value)
 
-        moveTree[encode(*move)] = moveTree_inner
+        
 
     else : #player1(black)
       moveTree = {}
@@ -167,13 +166,15 @@ def alphabeta(side, board, flags, depth, alpha=-math.inf, beta=math.inf):
           best_move = move
           best_moveList = moveList
           value = val_result_of_minmax
+        
+        moveTree[encode(*move)] = moveTree_inner
 
         if value <= alpha :
           break
           
         beta = min(beta, value)
 
-        moveTree[encode(*move)] = moveTree_inner
+        
 
     best_moveList.insert(0, best_move)
     # print(moveTree)
