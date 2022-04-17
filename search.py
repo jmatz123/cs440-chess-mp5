@@ -47,7 +47,7 @@ def random(side, board, flags, chooser):
 # Stuff you need to write:
 # Move-generating functions using minimax, alphabeta, and stochastic search.
 
-moveTree = {}
+# moveTree = {}
 # moveList_result = []
 def minimax(side, board, flags, depth):
   # https://www.freecodecamp.org/news/simple-chess-ai-step-by-step-1d55a9266977/
@@ -85,6 +85,7 @@ def minimax(side, board, flags, depth):
     
     moves = [ move for move in generateMoves(side, board, flags) ] #generate list of possible moves
     if side == False : #player0(white)
+      moveTree = {}
       value = -sys.maxsize
       # moveTree = {}
       # moveTree = {}
@@ -124,6 +125,7 @@ def minimax(side, board, flags, depth):
     # return value, best_moveList, moveTree
 
     else : #player1(black)
+      moveTree = {}
       value = sys.maxsize 
       # moveTree = {}
 
