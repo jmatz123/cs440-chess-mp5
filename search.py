@@ -79,8 +79,8 @@ def minimax(side, board, flags, depth):
     # moveTree_inner = {}
 
     if depth == 0 :
-      print("side ", side)
-      print("board value", evaluate(board))
+      # print("side ", side)
+      # print("board value", evaluate(board))
       return evaluate(board), [], {}
     
     moves = [ move for move in generateMoves(side, board, flags) ] #generate list of possible moves
@@ -96,15 +96,15 @@ def minimax(side, board, flags, depth):
         # print("current depth before, ", depth)
         new_side, new_board, new_flags = makeMove(side, board, move[0], move[1], flags, move[2])
 
-        print("white move: ", move)
-        print("current depth, ", depth)
+        # print("white move: ", move)
+        # print("current depth, ", depth)
 
         val_result_of_minmax, moveList, moveTree_inner = minimax(new_side, new_board, new_flags, depth - 1)
-        print("black local moveList: ", moveList)
-        print("inner: ", moveTree_inner)
+        # print("black local moveList: ", moveList)
+        # print("inner: ", moveTree_inner)
 
         if val_result_of_minmax > value : #find the best move
-          print("this is a better move", move)
+          # print("this is a better move", move)
           best_move = move
           # best_previous_move = 
           best_moveList = moveList
@@ -130,10 +130,10 @@ def minimax(side, board, flags, depth):
       for move in moves :
         # print(move)
         new_side, new_board, new_flags = makeMove(side, board, move[0], move[1], flags, move[2])
-        print("black move: ", move)
-        print("current depth, ", depth)
+        # print("black move: ", move)
+        # print("current depth, ", depth)
         val_result_of_minmax, moveList, moveTree_inner = minimax(new_side, new_board, new_flags, depth - 1)
-        print("white local moveList: ", moveList)
+        # print("white local moveList: ", moveList)
 
         if val_result_of_minmax < value: #find the best move
           best_move = move
@@ -149,9 +149,9 @@ def minimax(side, board, flags, depth):
     best_moveList.insert(0, best_move)
     # else :
     #   best_moveList.append(best_move)
-    print("current side", side)
-    print("current moveList", best_moveList)      
-    print("current best move", best_move)
+    # print("current side", side)
+    # print("current moveList", best_moveList)      
+    # print("current best move", best_move)
 
     return value, best_moveList, moveTree
     
