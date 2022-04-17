@@ -67,94 +67,47 @@ def minimax(side, board, flags, depth):
     # move: [fro,to,promote]
     # fro: [x,y]
     # to: [x,y]
-    move_value_dict = {}
+    # move_value_dict = {}
     best_moveList = []
     best_move_fro = []
     best_move_to = []
     best_move = [best_move_fro, best_move_to, None]
-    # moveTree = {}
-    # moveList_result = []
-    # moveList_total = []
-    
-    # moveTree_inner = {}
 
     if depth == 0 :
-      # print("side ", side)
-      # print("board value", evaluate(board))
       return evaluate(board), [], {}
     
     moves = [ move for move in generateMoves(side, board, flags) ] #generate list of possible moves
     if side == False : #player0(white)
       moveTree = {}
       value = -sys.maxsize
-      # moveTree = {}
-      # moveTree = {}
-      # moveList_result = []
-      
 
-      # best_move = [[None,None],[None,None],None]
       for move in moves :
-        # print("current depth before, ", depth)
         new_side, new_board, new_flags = makeMove(side, board, move[0], move[1], flags, move[2])
-
-        # print("white move: ", move)
-        # print("current depth, ", depth)
-
         val_result_of_minmax, moveList, moveTree_inner = minimax(new_side, new_board, new_flags, depth - 1)
-        # print("black local moveList: ", moveList)
-        # print("inner: ", moveTree_inner)
 
         if val_result_of_minmax > value : #find the best move
-          # print("this is a better move", move)
           best_move = move
-          # best_previous_move = 
           best_moveList = moveList
-          # moveList.append(best_move)
           value = val_result_of_minmax
 
-        # value = max(value, val_result_of_minmax)
         moveTree[encode(*move)] = moveTree_inner
-        # print("movetree:", moveTree)
-        # if moveList != False :
-      
-      # makeMove(side, board, best_move[0], best_move[1], flags, best_move[2])
-
-    # best_moveList.append(best_move)
-    # print("white moveList", best_moveList)      
-    # print("white's best move ", best_move)
-    # return value, best_moveList, moveTree
 
     else : #player1(black)
       moveTree = {}
       value = sys.maxsize 
-      # moveTree = {}
 
       for move in moves :
-        # print(move)
         new_side, new_board, new_flags = makeMove(side, board, move[0], move[1], flags, move[2])
-        # print("black move: ", move)
-        # print("current depth, ", depth)
         val_result_of_minmax, moveList, moveTree_inner = minimax(new_side, new_board, new_flags, depth - 1)
-        # print("white local moveList: ", moveList)
 
         if val_result_of_minmax < value: #find the best move
           best_move = move
           best_moveList = moveList
-          # moveList.append(best_move)
           value = val_result_of_minmax
 
-        # value = min(value, val_result_of_minmax)
         moveTree[encode(*move)] = moveTree_inner
 
-      # if best_move != None :
-    # if side == True :
     best_moveList.insert(0, best_move)
-    # else :
-    #   best_moveList.append(best_move)
-    # print("current side", side)
-    # print("current moveList", best_moveList)      
-    # print("current best move", best_move)
-
     return value, best_moveList, moveTree
     
     # for move in moves :
