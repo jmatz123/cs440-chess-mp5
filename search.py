@@ -1,7 +1,7 @@
 import math
 import sys
 
-from numpy import choose
+# from numpy import choose
 import chess.lib
 from chess.lib.utils import encode, decode
 from chess.lib.heuristics import evaluate
