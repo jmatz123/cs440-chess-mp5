@@ -139,7 +139,7 @@ def alphabeta(side, board, flags, depth, alpha=-math.inf, beta=math.inf):
 
       for move in moves :
         new_side, new_board, new_flags = makeMove(side, board, move[0], move[1], flags, move[2])
-        val_result_of_minmax, moveList, moveTree_inner = minimax(new_side, new_board, new_flags, depth - 1)
+        val_result_of_minmax, moveList, moveTree_inner = alphabeta(new_side, new_board, new_flags, depth - 1, alpha, beta)
 
         if val_result_of_minmax > value : #find the best move
           best_move = move
@@ -159,7 +159,7 @@ def alphabeta(side, board, flags, depth, alpha=-math.inf, beta=math.inf):
 
       for move in moves :
         new_side, new_board, new_flags = makeMove(side, board, move[0], move[1], flags, move[2])
-        val_result_of_minmax, moveList, moveTree_inner = minimax(new_side, new_board, new_flags, depth - 1)
+        val_result_of_minmax, moveList, moveTree_inner = alphabeta(new_side, new_board, new_flags, depth - 1, alpha, beta)
 
         if val_result_of_minmax < value: #find the best move
           best_move = move
