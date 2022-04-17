@@ -277,50 +277,50 @@ def alphabeta(side, board, flags, depth, alpha=-math.inf, beta=math.inf):
       depth (int >=0): depth of the search (number of moves)
     '''
 
-    moveTree = {}
-    if depth == 0 :
-      return evaluate(board), [], {}
+    # moveTree = {}
+    # if depth == 0 :
+    #   return evaluate(board), [], {}
     
-    moves = [ move for move in generateMoves(side, board, flags) ] #generate list of possible moves
-    if side == False : #player0(white)
-      value = -sys.maxsize
+    # moves = [ move for move in generateMoves(side, board, flags) ] #generate list of possible moves
+    # if side == False : #player0(white)
+    #   value = -sys.maxsize
 
-      for move in moves :
-        new_side, new_board, new_flags = makeMove(side, board, move[0], move[1], flags, move[2])
-        val_result_of_alphabeta, moveList, moveTree_inner = alphabeta(new_side, new_board, new_flags, depth -1, alpha, beta)
+    #   for move in moves :
+    #     new_side, new_board, new_flags = makeMove(side, board, move[0], move[1], flags, move[2])
+    #     val_result_of_alphabeta, moveList, moveTree_inner = alphabeta(new_side, new_board, new_flags, depth -1, alpha, beta)
 
-        if val_result_of_alphabeta > value : #find the best move
-          best_move = move
-          value = val_result_of_alphabeta
+    #     if val_result_of_alphabeta > value : #find the best move
+    #       best_move = move
+    #       value = val_result_of_alphabeta
         
-        if value >+ beta :
-          break
+    #     if value >+ beta :
+    #       break
 
-        alpha = max(alpha, value)
-        moveTree[encode(*move)] = moveTree_inner
-      moveList.append(best_move)
+    #     alpha = max(alpha, value)
+    #     moveTree[encode(*move)] = moveTree_inner
+    #   moveList.append(best_move)
 
-      return value, moveList, moveTree
+    #   return value, moveList, moveTree
     
-    else: #player1(black)
-      value = sys.maxsize
+    # else: #player1(black)
+    #   value = sys.maxsize
 
-      for move in moves :
-        new_side, new_board, new_flags = makeMove(side, board, move[0], move[1], flags, move[2])
-        val_result_of_alphabeta, moveList, moveTree_inner = alphabeta(new_side, new_board, new_flags, depth -1, alpha, beta)
+    #   for move in moves :
+    #     new_side, new_board, new_flags = makeMove(side, board, move[0], move[1], flags, move[2])
+    #     val_result_of_alphabeta, moveList, moveTree_inner = alphabeta(new_side, new_board, new_flags, depth -1, alpha, beta)
 
-        if val_result_of_alphabeta < value : #find the best move
-          best_move = move
-          value = val_result_of_alphabeta
+    #     if val_result_of_alphabeta < value : #find the best move
+    #       best_move = move
+    #       value = val_result_of_alphabeta
         
-        if value <=alpha :
-          break
+    #     if value <=alpha :
+    #       break
         
-        beta = min(beta, value)
-        moveTree[encode(*move)] = moveTree_inner
-      moveList.append(best_move)
+    #     beta = min(beta, value)
+    #     moveTree[encode(*move)] = moveTree_inner
+    #   moveList.append(best_move)
 
-      return value, moveList, moveTree
+    #   return value, moveList, moveTree
     # raise NotImplementedError("you need to write this!")
     
 
