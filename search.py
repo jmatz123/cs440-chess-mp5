@@ -1,6 +1,8 @@
 import math
 import sys
 
+from flask import Flask
+
 # from numpy import choose
 import chess.lib
 from chess.lib.utils import encode, decode
@@ -152,8 +154,6 @@ def alphabeta(side, board, flags, depth, alpha=-math.inf, beta=math.inf):
 
         alpha = max(alpha, value)
 
-        
-
     else : #player1(black)
       moveTree = {}
       value = sys.maxsize 
@@ -173,8 +173,6 @@ def alphabeta(side, board, flags, depth, alpha=-math.inf, beta=math.inf):
           break
           
         beta = min(beta, value)
-
-        
 
     best_moveList.insert(0, best_move)
     # print(moveTree)
@@ -196,4 +194,125 @@ def stochastic(side, board, flags, depth, breadth, chooser):
       breadth: number of different paths 
       chooser: a function similar to random.choice, but during autograding, might not be random.
     '''
-    raise NotImplementedError("you need to write this!")
+    # for every initial move, check breadth random paths
+      # for each initial move, repeatedly use random chooser for depth -1 number of times
+      # average the values of each path
+      # find the move with the best average value(max for white and min for black)
+    # if not an initial move, do random moves
+    if depth == 0 :
+        return evaluate(board), [], {}
+    
+    moveTree = {}
+    
+    init_move_vals = {}
+    initial_moves = [ move for move in generateMoves(side, board, flags) ] #generate list of possible moves
+
+    for init_move in initial_moves :
+      average_value = 0
+      new_side, new_board, new_flags = makeMove(side, board, init_move[0], init_move[1], flags, init_move[2])
+
+      for num in range(breadth) :
+        total_init_move_value = 0
+        
+        possible_moves = [ move for move in generateMoves(new_side, new_board, new_flags) ]
+
+        while depth > 0 :
+          next_move = chooser(possible_moves)
+          last_side, last_board, last_flags = makeMove(side, board, next_move[0], next_move[1], flags, next_move[2])
+
+          depth -= 1
+        
+        leaf_val = evaluate(last_board)
+        total_init_move_value += leaf_val
+
+      average_value = total_init_move_value / breadth
+      init_move_vals[init_move] = average_value
+
+      best_move = max(init_move_vals, key=init_move_vals.get)
+      moveList.append(best_move)
+
+      return init_move_vals[best_move], moveList, {}
+
+#     # how to save original depth
+#     # orig_depth = depth
+#     if depth == 0 :
+#         return evaluate(board), [], {}
+
+#     # initial_move
+#     # if condition for initial move
+#     if depth == 1 :
+#       vals_for_initial = []
+#       initial_moves = [ move for move in generateMoves(side, board, flags) ] #generate list of possible moves
+
+#       # if original_depth == curr_depth :
+#       for move in initial_moves :
+#         new_side, new_board, new_flags = makeMove(side, board, move[0], move[1], flags, move[2])
+#         value = evaluate(new_board)
+
+#       vals_for_initial.append(value)
+  
+#     # if orig_depth == depth :
+#     #   for move in moves :
+#     #     new_side, new_board, new_flags = makeMove(side, board, move[0], move[1], flags, move[2])
+#     #     val_result_of_stochastic, moveList, moveTree_inner = stochastic(new_side, new_board, new_flags, 1, 0, None)
+    
+#     # rest of moves
+#     # else :
+
+#     for initial_move in initial_moves :
+#       moves = [ move for move in generateMoves(side, board, flags) ] #generate list of possible moves
+#       for moves in moves :
+#         val_result_of_stochastic, moveList, moveTree_inner = stochastic(new_side, new_board, new_flags, depth - 1, breadth, chooser)
+
+#     each_val_path = 0
+#     if side == False :#player0(white)
+#       value = -sys.maxsize
+#       for move in moves:
+#         new_side, new_board, new_flags = makeMove(side, board, move[0], move[1], flags, move[2])
+#         val_result_of_stochastic, moveList, moveTree_inner = stochastic(new_side, new_board, new_flags, depth - 1, breadth, chooser)
+
+#         each_val_path += val_result_of_stochastic
+    
+#       average_path_val = each_val_path / depth
+
+#       if average_path_val > value :
+#         value = average_path_val
+
+#       else :#player1(black)
+#         return None, None, None
+
+# # def stochastic_helper(side, board, flags):
+# #   vals_for_initial = []
+# #   moves = [ move for move in generateMoves(side, board, flags) ] #generate list of possible moves
+
+# #   # if original_depth == curr_depth :
+# #   for move in moves :
+# #     new_side, new_board, new_flags = makeMove(side, board, move[0], move[1], flags, move[2])
+# #     value = evaluate(new_board)
+
+# #     vals_for_initial.append(value)
+# #       # val_result_of_stochastic, moveList, moveTree_inner = stochastic_helper(side, board, flags, curr_depth, breadth, chooser, original_depth)
+  
+# #   return vals_for_initial, moves
+
+# def stochastic_recurse_helper(side, board, flags, depth, breadth, chooser, initial_move):
+#   result_moveList = []
+#   total_path_value = 0
+#   if depth == 0 :
+#     return evaluate(board), [], {}
+  
+#   moves = [ move for move in generateMoves(side, board, flags) ] #generate list of possible moves
+#   if side == False : #player0(white)
+#     moveTree = {}
+
+#     for move in moves :
+#       new_side, new_board, new_flags = makeMove(side, board, move[0], move[1], flags, move[2])
+#       indiv_value, moveList, moveTree_inner = stochastic_recurse_helper(new_side, new_board, new_flags, depth - 1, breadth, chooser, initial_move)
+
+#     moveTree[encode(*move)] = moveTree_inner
+
+#     # somehow sum values for one path and get average
+
+#   else: #player1(black)
+
+#   return val_for_each_path, result_moveList, moveTree
