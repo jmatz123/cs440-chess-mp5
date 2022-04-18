@@ -1,7 +1,7 @@
 import math
 import sys
 
-from flask import Flask
+# from flask import Flask
 
 # from numpy import choose
 import chess.lib
