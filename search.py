@@ -203,6 +203,7 @@ def stochastic(side, board, flags, depth, breadth, chooser):
         return evaluate(board), [], {}
     
     moveTree = {}
+    moveList = []
     
     init_move_vals = {}
     initial_moves = [ move for move in generateMoves(side, board, flags) ] #generate list of possible moves
