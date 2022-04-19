@@ -1,4 +1,5 @@
 import math
+from os import pathsep
 import sys
 
 # from flask import Flask
@@ -205,34 +206,65 @@ def stochastic(side, board, flags, depth, breadth, chooser):
     moveTree = {}
     moveList = []
     
+    path_list = []
+    
     init_move_vals = {}
     initial_moves = [ move for move in generateMoves(side, board, flags) ] #generate list of possible moves
 
     for init_move in initial_moves :
       average_value = 0
+
+      # make initial move
       new_side, new_board, new_flags = makeMove(side, board, init_move[0], init_move[1], flags, init_move[2])
+      # possible_moves = [ move for move in generateMoves(new_side, new_board, new_flags) ]
 
-      for num in range(breadth) :
+      initial_move_list = []
+      while breadth > 0 :
+
         total_init_move_value = 0
-        
-        possible_moves = [ move for move in generateMoves(new_side, new_board, new_flags) ]
 
+        # first move in path
+        # next_move = chooser(possible_moves)
+        # path_side, path_board, path_flags = makeMove(new_side, new_board, next_move[0], next_move[1], new_flags, next_move[2])
+
+        last_side = new_side
+        last_board = new_board
+        last_flags = new_flags
+
+        path_list = []
         while depth > 0 :
-          next_move = chooser(possible_moves)
-          last_side, last_board, last_flags = makeMove(side, board, next_move[0], next_move[1], flags, next_move[2])
+          path_possible_moves = [ move for move in generateMoves(last_side, last_board, last_flags) ]
+          path_move = chooser(path_possible_moves)
+          path_list.insert(0, path_move)
+
+          last_side, last_board, last_flags = makeMove(last_side, last_board, path_move[0], path_move[1], last_flags, path_move[2])
 
           depth -= 1
-        
+        initial_move_list.append(path_list)
+
         leaf_val = evaluate(last_board)
         total_init_move_value += leaf_val
+      
+        breadth -= 1
+      
+      multiple_path_coll = {}
+      for big_list in initial_move_list :
+        innerTree = {}
+
+        for move in big_list :
+          innerTree[move] = innerTree
+
+        multiple_path_coll.append(innerTree)
+      moveTree[init_move] = multiple_path_coll
+
 
       average_value = total_init_move_value / breadth
       init_move_vals[init_move] = average_value
 
-      best_move = max(init_move_vals, key=init_move_vals.get)
-      moveList.append(best_move)
+    best_move = max(init_move_vals, key=init_move_vals.get)
+    moveList.append(best_move)
 
-      return init_move_vals[best_move], moveList, {}
+    return init_move_vals[best_move], moveList, moveTree
 
 #     # how to save original depth
 #     # orig_depth = depth
