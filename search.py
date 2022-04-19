@@ -1,3 +1,4 @@
+from heapq import merge
 import math
 from os import pathsep
 import sys
@@ -263,7 +264,7 @@ def stochastic(side, board, flags, depth, breadth, chooser):
         # print("final inner tree:", innerTree)
         multiple_path_coll.append(innerTree)
       for val in multiple_path_coll :
-        some_dict = val | some_dict
+        some_dict = {**some_dict, **innerTree}
         # print("multiple_path_coll", multiple_path_coll)
       moveTree[encode(*init_move)] = some_dict
       # print("movetree", moveTree)
