@@ -219,10 +219,8 @@ def stochastic(side, board, flags, depth, breadth, chooser):
 
       initial_move_list = []
       counter_breadth = breadth
+      total_init_move_value = 0
       while counter_breadth > 0 :
-
-        total_init_move_value = 0
-
         # first move in path
         # next_move = chooser(possible_moves)
         # path_side, path_board, path_flags = makeMove(new_side, new_board, next_move[0], next_move[1], new_flags, next_move[2])
@@ -233,43 +231,61 @@ def stochastic(side, board, flags, depth, breadth, chooser):
 
         path_list = []
         counter_depth = depth
-        while counter_depth > 0 :
+        while counter_depth - 1 > 0 :
           path_possible_moves = [ move for move in generateMoves(last_side, last_board, last_flags) ]
           path_move = chooser(path_possible_moves)
           path_list.insert(0, path_move)
 
           last_side, last_board, last_flags = makeMove(last_side, last_board, path_move[0], path_move[1], last_flags, path_move[2])
-
+          # print("****",counter_breadth, counter_depth)
           counter_depth -= 1
         initial_move_list.append(path_list)
 
         leaf_val = evaluate(last_board)
+        # print("leaf value", leaf_val)
         total_init_move_value += leaf_val
+        # print("total value", total_init_move_value)
       
         counter_breadth -= 1
       
       multiple_path_coll = []
+      some_dict = {}
       for big_list in initial_move_list :
-        print("big list", big_list)
+        # print("big list", big_list)
         innerTree = {}
 
         for move in big_list :
-          print("inner tree:", innerTree)
+          # print("inner tree:", innerTree)
           # innerDict = innerTree
           innerTree = {encode(*move) : innerTree}
           # innerTree[encode(*move)] = innerDict
 
-        print("final inner tree:", innerTree)
+        # print("final inner tree:", innerTree)
         multiple_path_coll.append(innerTree)
-        print("multiple_path_coll", multiple_path_coll)
-      moveTree[encode(*init_move)] = multiple_path_coll
-      print("movetree", moveTree)
+      for val in multiple_path_coll :
+        some_dict = val | some_dict
+        # print("multiple_path_coll", multiple_path_coll)
+      moveTree[encode(*init_move)] = some_dict
+      # print("movetree", moveTree)
 
       average_value = total_init_move_value / breadth
+      # print("initial move", init_move)
+
+      # print("average value", average_value)
       init_move_vals[encode(*init_move)] = average_value
 
-    best_move = max(init_move_vals, key=init_move_vals.get)
-    moveList.append(best_move)
+    if side == False :
+      best_move = max(init_move_vals, key=init_move_vals.get)
+    else :
+      best_move = min(init_move_vals, key=init_move_vals.get)
+    # print("best move", best_move)
+    # print("best move", decode(best_move))
+    moveList.append(decode(best_move))
+    # print("best val", init_move_vals[best_move])
+
+
+    # print("*****", moveList[0])
+  
 
     return init_move_vals[best_move], moveList, moveTree
 
