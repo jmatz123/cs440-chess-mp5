@@ -205,7 +205,6 @@ def stochastic(side, board, flags, depth, breadth, chooser):
     
     moveTree = {}
     moveList = []
-    
     path_list = []
     
     init_move_vals = {}
@@ -219,7 +218,8 @@ def stochastic(side, board, flags, depth, breadth, chooser):
       # possible_moves = [ move for move in generateMoves(new_side, new_board, new_flags) ]
 
       initial_move_list = []
-      while breadth > 0 :
+      counter_breadth = breadth
+      while counter_breadth > 0 :
 
         total_init_move_value = 0
 
@@ -232,34 +232,41 @@ def stochastic(side, board, flags, depth, breadth, chooser):
         last_flags = new_flags
 
         path_list = []
-        while depth > 0 :
+        counter_depth = depth
+        while counter_depth > 0 :
           path_possible_moves = [ move for move in generateMoves(last_side, last_board, last_flags) ]
           path_move = chooser(path_possible_moves)
           path_list.insert(0, path_move)
 
           last_side, last_board, last_flags = makeMove(last_side, last_board, path_move[0], path_move[1], last_flags, path_move[2])
 
-          depth -= 1
+          counter_depth -= 1
         initial_move_list.append(path_list)
 
         leaf_val = evaluate(last_board)
         total_init_move_value += leaf_val
       
-        breadth -= 1
+        counter_breadth -= 1
       
-      multiple_path_coll = {}
+      multiple_path_coll = []
       for big_list in initial_move_list :
+        print("big list", big_list)
         innerTree = {}
 
         for move in big_list :
-          innerTree[move] = innerTree
+          print("inner tree:", innerTree)
+          # innerDict = innerTree
+          innerTree = {encode(*move) : innerTree}
+          # innerTree[encode(*move)] = innerDict
 
+        print("final inner tree:", innerTree)
         multiple_path_coll.append(innerTree)
-      moveTree[init_move] = multiple_path_coll
-
+        print("multiple_path_coll", multiple_path_coll)
+      moveTree[encode(*init_move)] = multiple_path_coll
+      print("movetree", moveTree)
 
       average_value = total_init_move_value / breadth
-      init_move_vals[init_move] = average_value
+      init_move_vals[encode(*init_move)] = average_value
 
     best_move = max(init_move_vals, key=init_move_vals.get)
     moveList.append(best_move)
